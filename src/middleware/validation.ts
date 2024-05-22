@@ -1,0 +1,53 @@
+import { body, validationResult } from "express-validator";
+import { Request, Response, NextFunction } from "express";
+//express-validator is a popular library in the Node.js ecosystem used for validating and sanitizing user input in Express applications. It leverages the power of validator.js to provide a robust set of validation and sanitization functions that can be used to ensure the integrity of data before processing it in your application
+// Use the validationResult function to check for validation errors.
+//body(), param(), query(), cookie(), header() - These methods are used to specify the location of the data to validate and sanitize.
+//They are followed by validation and sanitization methods such as .isEmail(), .isLength(), .trim(), .escape(), etc.
+
+const handleValidationErrors = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+};
+
+export const validateMyUserRequest = [
+    body("name").isString().notEmpty().withMessage("Name must be a string"),
+    body("addressLine1")
+        .isString()
+        .notEmpty()
+        .withMessage("AddressLine1 must be a string"),
+    body("city").isString().notEmpty().withMessage("City must be a string"),
+    body("country").isString().notEmpty().withMessage("Country must be a string"),
+    handleValidationErrors,
+];
+
+export const validateMyRestaurantRequest = [
+    body("restaurantName").notEmpty().withMessage("Restaurant name is required"),
+    body("city").notEmpty().withMessage("City is required"),
+    body("country").notEmpty().withMessage("Country is required"),
+    body("deliveryPrice")
+        .isFloat({ min: 0 })
+        .withMessage("Delivery price must be a positive number"),
+    body("estimatedDeliveryTime")
+        .isInt({ min: 0 })
+        .withMessage("Estimated delivery time must be a postivie integar"),
+    body("cuisines")
+        .isArray()
+        .withMessage("Cuisines must be an array")
+        .not()
+        .isEmpty()
+        .withMessage("Cuisines array cannot be empty"),
+    body("menuItems").isArray().withMessage("Menu items must be an array"),
+    body("menuItems.*.name").notEmpty().withMessage("Menu item name is required"),
+    body("menuItems.*.price")
+        .isFloat({ min: 0 })
+        .withMessage("Menu item price is required and must be a postive number"),
+    handleValidationErrors,
+];
