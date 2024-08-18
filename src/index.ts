@@ -1,10 +1,10 @@
-import express, {Request, Response} from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import 'dotenv/config'; // jo bhi humne .env ke andr define kiya hoga vo sara load ho jayega process object k andr
 import mongoose from 'mongoose';
 import myUserRoute from "./routes/MyUserRoute"
 
-mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(() =>console.log("Connected to database!")); 
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(() => console.log("Connected to database!"));
 
 const app = express(); //this will crate a new server for us
 
@@ -22,12 +22,12 @@ app.get("/health", async (req: Request, res: Response) => {
   res.send({ message: "health OK!" });
 });
 
-app.use("/api/my/user", myUserRoute);  //it's going to tell Express that any requests that start with /APi/my/User it's going to forward the request onto the MyUserRoutes file. and then in there depending on what the rest of the endpoint is it will have the request on to the appropriate controller which is going to handle the business logic and any interactions with the database
+app.use("/api/my/user", myUserRoute);  //it's going to tell Express that any requests that start with /api/my/User it's going to forward the request onto the MyUserRoutes file. and then in there depending on what the rest of the endpoint is it will have the request on to the appropriate controller which is going to handle the business logic and any interactions with the database
 
 
 app.listen(7000, () => {
-    console.log("server started on localhost:7000");
-  });
+  console.log("server started on localhost:7000");
+});
 
 
 

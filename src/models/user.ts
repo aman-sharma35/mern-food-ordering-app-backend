@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
         type: String,
     },
     country: {
-        typr: String,
+        type: String,
     }
 });
 
